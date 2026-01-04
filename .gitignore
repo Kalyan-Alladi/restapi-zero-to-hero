@@ -1,0 +1,17 @@
+# include files that should be ignored by Git
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.log
+*.tmp
+*.swp
+*.ide
+*.DS_Store
+*.vscode/
+.nuget/
+*.ncrunch*
+*.resharper/
+*.dotCover/
+_ReSharper*/

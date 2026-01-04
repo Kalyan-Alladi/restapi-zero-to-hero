@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoCiCdAzureApi", "DemoCiCdAzureApi.csproj", "{24B0CD6D-0FD8-26F0-9730-1A271D998AB7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{24B0CD6D-0FD8-26F0-9730-1A271D998AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24B0CD6D-0FD8-26F0-9730-1A271D998AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24B0CD6D-0FD8-26F0-9730-1A271D998AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24B0CD6D-0FD8-26F0-9730-1A271D998AB7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8F1C5AA3-2544-44B4-8C12-4435F8EECE83}
+	EndGlobalSection
+EndGlobal
