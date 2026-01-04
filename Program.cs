@@ -1,3 +1,7 @@
+using DemoCiCdAzureApi.Data;
+using DemoCiCdAzureApi.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +9,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddDbContext<UserDbContext>(options =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        options.UseInMemoryDatabase("UserDb");
+    }
+    else
+    {
+        var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=app.db";
+        options.UseSqlite(conn);
+    }
+});
+builder.Services.AddControllers();
+
 
 var app = builder.Build();
 
