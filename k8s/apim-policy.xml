@@ -1,0 +1,47 @@
+<policies>
+    <inbound>
+        <base />
+        <!-- Rate limiting: 100 calls per minute per IP -->
+        <rate-limit-by-key calls="100" renewal-period="60" counter-key="@(context.Request.IpAddress)" />
+        
+        <!-- Remove response headers for security -->
+        <set-header name="X-Powered-By" exists-action="delete" />
+        <set-header name="X-AspNet-Version" exists-action="delete" />
+        
+        <!-- CORS policy -->
+        <cors allow-credentials="false">
+            <allowed-origins>
+                <origin>*</origin>
+            </allowed-origins>
+            <allowed-methods>
+                <method>GET</method>
+                <method>POST</method>
+                <method>PUT</method>
+                <method>DELETE</method>
+            </allowed-methods>
+            <allowed-headers>
+                <header>*</header>
+            </allowed-headers>
+        </cors>
+        
+        <!-- Optional: JWT validation (uncomment when needed) -->
+        <!--
+        <validate-jwt header-name="Authorization" failed-validation-httpcode="401">
+            <issuer-signing-keys>
+                <key>YOUR_JWT_SECRET</key>
+            </issuer-signing-keys>
+        </validate-jwt>
+        -->
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+        <!-- Cache responses for 60 seconds -->
+        <cache-store duration="60" />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

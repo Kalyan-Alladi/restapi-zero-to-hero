@@ -1,0 +1,64 @@
+name: Build and Deploy to AKS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ACR_NAME: usermicroserviceacr
+  IMAGE_NAME: user-microservice
+  AKS_CLUSTER: usermicroserviceaks
+  AKS_NAMESPACE: user-microservice
+  RESOURCE_GROUP: UserMicroserviceRG
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: \${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to ACR
+        run: az acr login --name \${{ env.ACR_NAME }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t \${{ env.ACR_NAME }}.azurecr.io/\${{ env.IMAGE_NAME }}:\${{ github.sha }} .
+          docker build -t \${{ env.ACR_NAME }}.azurecr.io/\${{ env.IMAGE_NAME }}:latest .
+          docker push \${{ env.ACR_NAME }}.azurecr.io/\${{ env.IMAGE_NAME }}:\${{ github.sha }}
+          docker push \${{ env.ACR_NAME }}.azurecr.io/\${{ env.IMAGE_NAME }}:latest
+
+      - name: Get AKS credentials
+        run: az aks get-credentials --resource-group \${{ env.RESOURCE_GROUP }} --name \${{ env.AKS_CLUSTER }} --overwrite-existing
+
+      - name: Deploy to AKS
+        run: |
+          kubectl set image deployment/user-microservice user-api=\${{ env.ACR_NAME }}.azurecr.io/\${{ env.IMAGE_NAME }}:\${{ github.sha }} -n \${{ env.AKS_NAMESPACE }}
+          kubectl rollout status deployment/user-microservice -n \${{ env.AKS_NAMESPACE }}
+
+      - name: Verify deployment
+        run: kubectl get pods -n \${{ env.AKS_NAMESPACE }}
+
+      - name: Logout from Azure
+        run: az logout
