@@ -139,7 +139,7 @@ jobs:
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: DemoCICDWebApi
+          app-name: UserMicroservicesApi
           slot-name: production
           package: ./publish
 
